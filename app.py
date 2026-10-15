@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 class Task(BaseModel):
@@ -26,3 +26,20 @@ def create_task(task: Task):
     next_task_id += 1
 
     return {"id": task_id, **tasks[task_id]}
+
+
+@app.get("/tasks/{task_id}/status", responses={404: {"description": "Task not found"}})
+def get_task_status(task_id: int):
+
+    if task_id not in tasks:
+        raise HTTPException(
+            status_code = 404,
+            detail = "Task not found"
+            )
+
+
+    return {
+        "task_id": task_id,
+        "completed": tasks[task_id]["completed"]
+    }
+    
