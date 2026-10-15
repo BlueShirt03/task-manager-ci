@@ -12,7 +12,7 @@ The purpose of this project is to demonstrate version control and continuous int
 - **FastAPI:** Framework used to create the REST API.
 - **Pydantic:** Validates incoming task data.
 - **Pytest:** Runs automated tests.
-- **HTTPX@:** Installed dependency used in the project's testing environment.
+- **HTTPX2:** Installed dependency used in the project's testing environment.
 - **Git and GitHub:** Manage version control and collaboration.
 - **GitHub Actions:** Automates build validation and testing.
 - **Uvicorn:** Runs the FastAPI application locally.
