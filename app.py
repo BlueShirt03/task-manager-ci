@@ -1,9 +1,12 @@
+import os
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 class Task(BaseModel):
     title: str
     completed: bool = False
+
+APP_ENV = os.getenv("APP_ENV", "development")
 
 app = FastAPI()
 tasks = {}
