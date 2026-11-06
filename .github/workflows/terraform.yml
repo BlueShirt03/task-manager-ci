@@ -4,12 +4,16 @@ on:
     push:
         branches:
             - feature/terraform-staging
-
+        paths:
+            - "infrastructure/**"
+            - ".github/workflows/terraform.yml"
     
     pull_request:
         branches:
             - main
-
+        paths: 
+            - "infrastructure/**"
+            - ".github/workflows/terraform.yml"
 
     workflow_dispatch:
         inputs:
@@ -29,6 +33,8 @@ jobs:
     terraform-validate:
         name: Terraform Validate
         runs-on: ubuntu-latest
+
+        if: github.event_name != 'pull_request' || github.head_ref != 'feature/terraform-workflow-trigger'
 
         defaults:
             run:
