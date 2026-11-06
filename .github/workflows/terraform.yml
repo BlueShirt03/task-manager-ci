@@ -15,6 +15,9 @@ on:
             - "infrastructure/**"
             - ".github/workflows/terraform.yml"
 
+permissions:
+    contents: read
+
 jobs:
     terraform-validate:
         name: Terraform Validate
@@ -39,3 +42,46 @@ jobs:
 
             - name: Terraform Validate
               run: terraform validate
+
+    terraform-plan:
+        name: Terraform Plan
+        runs-on: ubuntu-lastest
+        needs: terraform-validate
+    
+        if: github.event_name == 'push' && github.ref == 'refs/heads/feature/terraform-staging'
+
+        environment: staging
+
+        defaults:
+            run:
+                working-directory: infrastructure
+
+        env:
+            TF_IN_AUTOMATION: "true"
+            TF_INPUT: "false"
+            TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
+            RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+            RENDER_OWNER_ID: ${{ secrets.RENDER_OWNER_ID }}
+            TF_VAR_repo_url: "https://github.com/BlueShirt03/task-manager-ci"
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            
+            - name: Set up Terraform
+              uses: hashicorp/setup-terraform@v3
+            
+            - name: Configure HCP Terraform credentials
+              env:
+                HCP_TOKEN: ${{ secrets.TF_API_TOKEN }}
+              run: |
+                mkdir -p "$HOME/.terraform.d"
+                printf '{"credentials":{"app.terraform.io":{"token":"%s"}}}\n' "$HCP_TOKEN" > "$HOME/.terraform.d/credentials.tfrc.json"
+                chmod 600 "$HOME/.terraform.d/credentials.tfrc.json"
+
+            - name: Terraform Initialize
+              run: terraform init
+
+            - name: Terraform Plan
+              run: terraform plan -no-color
+
