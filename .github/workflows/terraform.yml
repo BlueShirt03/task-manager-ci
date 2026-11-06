@@ -50,7 +50,7 @@ jobs:
     
         if: github.event_name == 'push' && github.ref == 'refs/heads/feature/terraform-staging'
 
-        environment: staging
+        environment: terraform-staging-plan
 
         defaults:
             run:
