@@ -4,16 +4,12 @@ on:
     push:
         branches:
             - feature/terraform-staging
-        paths:
-            - "infrastructure/**"
-            - ".github/workflows/terraform.yml"
+
     
     pull_request:
         branches:
             - main
-        paths: 
-            - "infrastructure/**"
-            - ".github/workflows/terraform.yml"
+
 
     workflow_dispatch:
         inputs:
