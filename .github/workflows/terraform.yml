@@ -55,7 +55,7 @@ jobs:
         runs-on: ubuntu-latest
         needs: terraform-validate
     
-        if: github.event_name == 'push' && github.ref == 'refs/heads/feature/terraform-staging'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
         environment: terraform-staging-plan
 
@@ -98,7 +98,7 @@ jobs:
         runs-on: ubuntu-latest
         needs: terraform-validate
 
-        if: github.event_name == 'workflow_dispatch' && inputs.operation == 'apply' && github.ref == 'refs/heads/feature/terraform-staging'
+        if: github.event_name == 'workflow_dispatch' && inputs.operation == 'apply' && github.ref == 'refs/heads/main'
 
         environment: terraform-staging-apply
 
