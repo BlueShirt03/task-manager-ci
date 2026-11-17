@@ -45,4 +45,16 @@ def get_task_status(task_id: int):
         "task_id": task_id,
         "completed": tasks[task_id]["completed"]
     }
+
+@app.get("/health/live")
+def liveness_check():
+    return {"status": "alive"}
+
+@app.get("/health/ready")
+def readiness_check():
+    return{
+        "status": "ready", 
+        "environment": APP_ENV
+    }
+
     
