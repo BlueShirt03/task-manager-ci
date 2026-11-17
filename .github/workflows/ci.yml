@@ -128,27 +128,41 @@ jobs:
           import time
           import urllib.request
 
-          url = os.environ["STAGING_URL"].rstrip("/") + "/"
+          base_url = os.environ["STAGING_URL"].rstrip("/")
 
-          for attempt in range(1, 13):
-              try:
-                  with urllib.request.urlopen(url, timeout=15) as response:
-                      status = response.status
-                      data = json.load(response)
+          endpoints = {
+              "/": {"message": "Welcome to the Task Manager API"},
+              "/health/live": {"status": "alive"},
+              "/health/ready": {"status": "ready"}
+          }
 
-                  if status == 200 and data.get("message") == "Welcome to the Task Manager API":
-                      print("Smoke test passed: Staging API is responding correctly.")
-                      break
+          for endpoint, expected in endpoints.items():
+              url = base_url + endpoint
 
-                  print(f"Attempt {attempt}: Unexpected API response.")
+              for attempt in range(1, 13):
+                  try:
+                      with urllib.request.urlopen(url, timeout=15) as response:
+                          status = response.status
+                          data = json.load(response)
 
-              except Exception as error:
-                  print(f"Attempt {attempt}: {error}")
+                      if status == 200 and all(
+                          data.get(key) == value
+                          for key, value in expected.items()
+                      ):
+                          print(f"PASS: {endpoint}")
+                          break
 
-              if attempt == 12:
-                  raise SystemExit("Smoke test failed after 12 attempts.")
+                      print(f"Attempt {attempt}: Unexpected response from {endpoint}")
 
-              time.sleep(10)
+                  except Exception as error:
+                      print(f"Attempt {attempt}: {error}")
+
+                  if attempt == 12:
+                      raise SystemExit(f"FAIL: Smoke test failed for {endpoint}")
+
+                  time.sleep(10)
+
+          print("All staging smoke tests passed.")
           PY
 
      

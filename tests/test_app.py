@@ -9,6 +9,13 @@ def test_home():
     assert response.status_code == 200
     assert response.json() == {"message": "Welcome to the Task Manager API"}
 
+
+def test_get_task():
+    response = client.get("/tasks")
+
+    assert response.status_code == 200
+    assert isinstance(response.json(), dict)
+
 def test_get_task_status():
     response = client.post(
         "/tasks",
@@ -26,7 +33,6 @@ def test_get_task_status():
         "task_id": task_id,
         "completed": False
     }
-
 
 def test_get_task_status_not_found():
     response = client.get("/tasks/999/status")
