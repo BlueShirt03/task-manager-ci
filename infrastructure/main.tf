@@ -13,5 +13,5 @@ resource "render_web_service" "staging" {
     }
   }
   start_command     = "uvicorn app:app --host 0.0.0.0 --port $PORT"
-  health_check_path = "/"
+  health_check_path = "/health/ready"
 }
