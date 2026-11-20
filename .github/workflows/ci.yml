@@ -165,5 +165,22 @@ jobs:
           print("All staging smoke tests passed.")
           PY
 
+  production-approval:
+          name: Production Release Approval 
+          needs: deploying-staging
+          if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+          runs-on: ubuntu-latest
+          environment: production
+
+          steps:
+            - name: Confirm Production Release Approval 
+              run: |
+                echo "Staging deployment and smoke tests passed."
+                echo "Production release approved."
+                echo "Commit: ${{ github.sha }}"
+                echo "Production deployment is not configured."
+
+        
+
      
 
